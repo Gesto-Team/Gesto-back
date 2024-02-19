@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
+import { ValidationPipe } from '@nestjs/common';
 const { xss } = require('express-xss-sanitizer');
 // Protect against XSS attacks, should come before any routes
 
@@ -10,6 +11,7 @@ async function bootstrap() {
 
   app.use(helmet());
   app.use(xss());
+  app.useGlobalPipes(new ValidationPipe());
 
   // Setting up swagger
   const config = new DocumentBuilder()

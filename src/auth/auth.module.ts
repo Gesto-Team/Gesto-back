@@ -9,6 +9,8 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import configuration from 'src/config/configuration';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from 'src/users/user.schema';
 
 @Module({
   controllers: [AuthController],
@@ -20,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
       secret: configuration().jwtSecret,
       signOptions: { expiresIn: '1000s' },
     }),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   providers: [AuthService, LocalStrategy, UsersService, JwtStrategy],
 })

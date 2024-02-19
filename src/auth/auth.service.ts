@@ -24,8 +24,4 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
-
-  async register(user: any): Promise<string> {
-    return this.usersService.create(user);
-  }
 }

@@ -5,20 +5,28 @@ import {
   Request,
   Get,
   Body,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from './jwt-auht.guard';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UsersService } from 'src/users/users.service';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService,
+  ) {}
 
   @Post('register')
-  async register(@Request() req: any) {
-    return this.authService.register(req.body);
+  @UsePipes(new ValidationPipe())
+  async register(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
   @UseGuards(LocalAuthGuard)
