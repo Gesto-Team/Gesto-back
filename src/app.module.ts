@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -12,7 +11,9 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     UsersModule,
     AuthModule,
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/fruitdb'),
+    MongooseModule.forRoot(
+      `${configuration().database.host}:${configuration().database.port}/${configuration().database.name}`,
+    ),
   ],
   controllers: [AppController],
   providers: [AppService],
