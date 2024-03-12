@@ -7,6 +7,7 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
+  Response,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
@@ -26,18 +27,50 @@ export class AuthController {
   @Post('register')
   @UsePipes(new ValidationPipe())
   async register(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    const user = await this.usersService.create(createUserDto);
+    console.log(user);
+    return this.authService.login(user);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req: any) {
-    return this.authService.login(req.user);
+    const user = await this.usersService.findOneByUsername(req.body.username)
+    return this.authService.login(user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req: any) {
-    return req.user;
+    const user = this.usersService.findOneByUsername(req.user.username);
+    return user;
   }
+
+  // @Post('refresh')
+  // async refresh(@Response() res: Response, @Request() req: Request) {
+  //   const oldRefreshToken = req.cookies['refresh_token'];
+  //   const decodedToken =
+  //     await this.authService.decodeRefreshToken(oldRefreshToken);
+
+  //   const newRefreshToken = await this.authService.replaceRefreshToken(
+  //     decodedToken.sub,
+  //     decodedToken.tokenId,
+  //   );
+  //   const newAccessToken = await this.authService.createAccessToken(
+  //     decodedToken.sub,
+  //   );
+
+  //   // Set custom expiration time for refresh token (e.g., 30 days)
+  //   const refreshExpiration = new Date();
+  //   refreshExpiration.setDate(refreshExpiration.getDate() + 30); // Set expiration to 30 days from now
+
+  //   res.cookie('refresh_token', newRefreshToken, {
+  //     httpOnly: true,
+  //     secure: true,
+  //     sameSite: 'strict',
+  //     expires: refreshExpiration,
+  //   });
+
+  //   return res.send({ access_token: newAccessToken });
+  // }
 }
