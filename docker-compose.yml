@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  # app service for your backend
+  app:
+    container_name: gesto-back
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_NAME: fruitdb
+      DATABASE_URI: database://127.0.0.1:27017
+    ports:
+      - '3000:3000'
+    depends_on:
+      - database
+
+  # start the mongodb service as container
+  database:
+    image: mongo:6.0
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_DATABASE: fruitdb
+
+  backoffice:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://database:27017/
+    depends_on:
+      - database
