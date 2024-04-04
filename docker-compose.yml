@@ -3,12 +3,8 @@ services:
   # app service for your backend
   app:
     container_name: gesto-back
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    environment:
-      DATABASE_NAME: fruitdb
-      DATABASE_URI: database://127.0.0.1:27017
+    restart: always
+    image: ghcr.io/gesto-team/gesto-back/gesto-back
     ports:
       - '3000:3000'
     depends_on:
@@ -23,3 +19,7 @@ services:
       - '27017:27017'
     environment:
       MONGO_INITDB_DATABASE: fruitdb
+    volumes:
+      - mongodb_data:/data/db
+volumes:
+  mongodb_data:
