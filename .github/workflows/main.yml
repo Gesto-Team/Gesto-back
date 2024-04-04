@@ -3,7 +3,7 @@ name: gesto-back
 on:
   push:
     branches:
-      - main
+      - master
       - devops
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "./docker-compose.yml"
+          source: './docker-compose.yml'
           target: /var/www/cyril/
       - name: SSH Execute Commands
         uses: appleboy/ssh-action@master
@@ -40,7 +40,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script:  echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          script:
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker stop gesto-back
             docker rm gesto-back
             docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
