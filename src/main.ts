@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
+import configuration from './config/configuration';
 const { xss } = require('express-xss-sanitizer');
 import * as cors from 'cors';
 // Protect against XSS attacks, should come before any routes
@@ -26,6 +27,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(configuration().apiPort);
 }
 bootstrap();
