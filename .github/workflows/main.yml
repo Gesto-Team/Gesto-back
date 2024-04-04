@@ -23,16 +23,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # - uses: actions/checkout@v4
-      # - name: copy file via ssh password
-      #   uses: appleboy/scp-action@v0.1.7
-      #   with:
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USERNAME }}
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     port: ${{ secrets.SSH_PORT }}
-      #     source: './docker-compose.yml'
-      #     target: /var/www/cyril/
+      - uses: actions/checkout@v4
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: './docker-compose.yml'
+          target: /var/www/cyril/
       - name: SSH Execute Commands
         uses: appleboy/ssh-action@master
         with:
@@ -40,10 +40,11 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script:
+          script: |
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker stop gesto-back
             docker rm gesto-back
-            docker image rm ghcr.io/gesto-team/gesto-back/gesto-back
+            docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
             cd /var/www/cyril/
+            ls -a
             docker compose up -d
