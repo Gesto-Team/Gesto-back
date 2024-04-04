@@ -44,6 +44,6 @@ jobs:
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker stop gesto-back
             docker rm gesto-back
-            docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
+            docker image rm ghcr.io/gesto-team/gesto-back/gesto-back
             cd /var/www/cyril/
             docker compose up -d
