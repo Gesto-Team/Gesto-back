@@ -46,5 +46,4 @@ jobs:
             docker rm gesto-back
             docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
             cd /var/www/cyril/
-            ls -a
             docker compose up -d
