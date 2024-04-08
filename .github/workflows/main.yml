@@ -22,6 +22,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    env:
+      API_PORT: ${{ secrets.API_PORT }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+      DATABASE_URI: ${{ secrets.DATABASE_URI }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       - uses: actions/checkout@v4
       - name: copy file via ssh password

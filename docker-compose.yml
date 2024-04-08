@@ -5,6 +5,12 @@ services:
     container_name: gesto-back
     restart: always
     image: ghcr.io/gesto-team/gesto-back/gesto-back
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - DATABASE_URI=${DATABASE_URI}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABSE_USER=${DATABASE_USER}
+      - API_PORT=${API_PORT}
     ports:
       - '3001:3000'
     depends_on:
