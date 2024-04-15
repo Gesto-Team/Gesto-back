@@ -13,6 +13,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: creating env variables
+        run: |
+          cd /var/www/cyril/
+          touch .env
+          echo API_PORT=${{ secrets.API_PORT }} >> .env
+          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
+          echo DATABASE_PORT=${{ secrets.DATABASE_PORT }} >> .env
+          echo DATABASE_URI=${{ secrets.DATABASE_URI }} >> .env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+
       - name: publish to registry
         uses: VaultVulp/gp-docker-action@1.2.0
         with:
@@ -35,18 +45,13 @@ jobs:
           target: /var/www/cyril/
       - name: SSH Execute Commands
         uses: appleboy/ssh-action@master
-        env:
-          API_PORT: ${{ secrets.API_PORT }}
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-          DATABASE_URI: ${{ secrets.DATABASE_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            echo ${{secrets.DATABASE_URI}} > /var/www/cyril/.env
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker stop gesto-back
             docker rm gesto-back
