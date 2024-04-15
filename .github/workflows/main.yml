@@ -15,7 +15,6 @@ jobs:
         uses: actions/checkout@v3
       - name: creating env variables
         run: |
-          cd /var/www/cyril/
           touch .env
           echo API_PORT=${{ secrets.API_PORT }} >> .env
           echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
