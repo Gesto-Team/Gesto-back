@@ -7,7 +7,6 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
-  Response,
 } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
@@ -28,14 +27,13 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   async register(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
-    console.log(user);
     return this.authService.login(user);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req: any) {
-    const user = await this.usersService.findOneByUsername(req.body.username)
+    const user = await this.usersService.findOneByUsername(req.body.username);
     return this.authService.login(user);
   }
 
