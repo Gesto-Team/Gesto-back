@@ -21,7 +21,6 @@ jobs:
           echo DATABASE_PORT=${{ secrets.DATABASE_PORT }} >> .env
           echo DATABASE_URI=${{ secrets.DATABASE_URI }} >> .env
           echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
-
       - name: publish to registry
         uses: VaultVulp/gp-docker-action@1.2.0
         with:
@@ -51,9 +50,9 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             echo ${{secrets.DATABASE_URI}} > /var/www/cyril/.env
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker stop gesto-back
             docker rm gesto-back
-            docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
+            docker stop mongodb
+            docker rm mongodb
             cd /var/www/cyril/
             docker compose up -d
