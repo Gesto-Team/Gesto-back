@@ -7,11 +7,13 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
+    SeedModule,
     ConfigModule.forRoot({ load: [configuration] }),
     MongooseModule.forRoot(
       `${configuration().database.host}:${configuration().database.port}/${configuration().database.name}`,

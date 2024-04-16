@@ -15,7 +15,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auht.guard';
-import { log } from 'console';
 
 @ApiTags('users')
 @Controller('users')
@@ -25,7 +24,6 @@ export class UsersController {
   @Post()
   @UsePipes(new ValidationPipe())
   create(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
     return this.usersService.create(createUserDto);
   }
 
@@ -37,8 +35,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return 'oui';
-    // return this.usersService.findOne(+id);
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')

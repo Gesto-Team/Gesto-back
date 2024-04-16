@@ -21,6 +21,7 @@ async function bootstrap() {
     .setTitle('My nest API')
     .setDescription('A full API implemented with NestJS framework.')
     .setVersion('1.0')
+    .addTag('seed')
     .addTag('auth')
     .addTag('users')
     .build();
