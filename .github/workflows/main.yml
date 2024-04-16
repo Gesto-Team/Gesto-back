@@ -13,14 +13,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: creating env variables
-        run: |
-          touch .env
-          echo API_PORT=${{ secrets.API_PORT }} >> .env
-          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
-          echo DATABASE_PORT=${{ secrets.DATABASE_PORT }} >> .env
-          echo DATABASE_URI=${{ secrets.DATABASE_URI }} >> .env
-          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
       - name: publish to registry
         uses: VaultVulp/gp-docker-action@1.2.0
         with:
@@ -49,7 +41,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            echo ${{secrets.DATABASE_URI}} > /var/www/cyril/.env
+            echo API_PORT=${{ secrets.API_PORT }} >> /var/www/cyril/.env
+            echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> /var/www/cyril/.env
+            echo DATABASE_PORT=${{ secrets.DATABASE_PORT }} >> /var/www/cyril/.env
+            echo DATABASE_URI=${{ secrets.DATABASE_URI }} >> /var/www/cyril/.env
+            echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> /var/www/cyril/.env
             docker stop gesto-back
             docker rm gesto-back
             docker stop mongodb
