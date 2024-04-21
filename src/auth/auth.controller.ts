@@ -8,10 +8,10 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { LocalAuthGuard } from 'src/auth/Passport/local-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from './jwt-auht.guard';
+import { JwtAuthGuard } from './Jwt/jwt-auth.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 
@@ -32,16 +32,17 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: any) {
-    const user = await this.usersService.findOneByUsername(req.body.username);
+  async login(@Body() createUserDto: CreateUserDto) {
+    const user = await this.usersService.findOneByUsername(
+      createUserDto.username,
+    );
     return this.authService.login(user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req: any) {
-    const user = this.usersService.findOneByUsername(req.user.username);
-    return user;
+    return this.usersService.findOneByUsername(req.user.username);
   }
 
   // @Post('refresh')

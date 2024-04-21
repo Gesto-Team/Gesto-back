@@ -4,18 +4,19 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.schema';
-import { hash } from 'bcrypt';
+import { HasherService } from 'src/hasher/hasher.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    private hasherService: HasherService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel({
       username: createUserDto.username,
-      password: await hash(createUserDto.password, 10),
+      password: await this.hasherService.hash(createUserDto.password),
     });
     return createdUser.save();
   }
