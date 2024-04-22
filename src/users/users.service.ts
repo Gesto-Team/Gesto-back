@@ -1,52 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
-export interface User {
-  userId: number;
-  username: string;
-  password: string;
-}
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from './user.schema';
+import { HasherService } from 'src/hasher/hasher.service';
+import { MyMongooseUserService } from 'src/external-services/my-mongoose/my-mongoose-user/my-mongoose-user.service';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+    private hasherService: HasherService,
+    private mgUserService: MyMongooseUserService,
+  ) {}
 
-  async findOneByUsername(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+  async create(createUserDto: CreateUserDto): Promise<any> {
+    return this.mgUserService.create({
+      username: createUserDto.username,
+      password: await this.hasherService.hash(createUserDto.password),
+    });
   }
 
-  create(createUserDto: CreateUserDto) {
-    this.users.push({ userId: this.users.length + 1, ...createUserDto });
-    console.log(this.users);
-
-    return `${createUserDto.username} has been created!`;
+  async findOne(id: string): Promise<User | null> {
+    return this.mgUserService.findOne(id);
   }
 
-  findAll() {
-    return this.users;
+  async findOneByUsername(username: string): Promise<User | null> {
+    return this.mgUserService.findOneByUsername(username);
   }
 
-  findOne(id: number) {
-    return this.users.find((user) => user.userId === id) || 'User not found';
+  async findAll(): Promise<User[]> {
+    return this.mgUserService.findAll();
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    return this.mgUserService.update(id, updateUserDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<User> {
+    return this.mgUserService.delete(id);
   }
 }
