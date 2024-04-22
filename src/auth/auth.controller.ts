@@ -13,7 +13,6 @@ import { Request, Response } from 'express';
 import { LocalAuthGuard } from 'src/auth/Passport/local-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from './Jwt/jwt-auth.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import JwtRefreshGuard from './Jwt/jwtRefresh-auth.guard';
@@ -40,7 +39,7 @@ export class AuthController {
     });
     return res.json({
       access_token: accessToken,
-      userId: user.userId,
+      userId: user.id,
     });
   }
 
@@ -50,23 +49,17 @@ export class AuthController {
     const user = await this.authService.login(createUserDto);
     const accessToken = await this.authService.createAccessToken(user.id);
     const refreshToken = await this.authService.createRefreshToken(user.id);
-    console.log(accessToken, refreshToken, user.id);
 
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
     });
+
     return res.json({
       access_token: accessToken,
-      userId: user.userId,
+      userId: user.id,
     });
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Req() req: any) {
-    return this.usersService.findOneByUsername(req.user.username);
   }
 
   @UseGuards(JwtRefreshGuard)
