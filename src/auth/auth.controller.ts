@@ -33,16 +33,15 @@ export class AuthController {
     const accessToken = await this.authService.createAccessToken(user.id);
     const refreshToken = await this.authService.createRefreshToken(user.id);
 
-    return res
-      .cookie('refresh_token', refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-      })
-      .json({
-        access_token: accessToken,
-        userId: user.userId,
-      });
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    return res.json({
+      access_token: accessToken,
+      userId: user.userId,
+    });
   }
 
   @UseGuards(LocalAuthGuard)
@@ -51,17 +50,17 @@ export class AuthController {
     const user = await this.authService.login(createUserDto);
     const accessToken = await this.authService.createAccessToken(user.id);
     const refreshToken = await this.authService.createRefreshToken(user.id);
+    console.log(accessToken, refreshToken, user.id);
 
-    return res
-      .cookie('refresh_token', refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-      })
-      .json({
-        access_token: accessToken,
-        userId: user.userId,
-      });
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    return res.json({
+      access_token: accessToken,
+      userId: user.userId,
+    });
   }
 
   @UseGuards(JwtAuthGuard)

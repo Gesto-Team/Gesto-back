@@ -4,16 +4,25 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
-import * as cors from 'cors';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
-  app.use(cors());
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());
+
+  app.enableCors({
+    origin: [
+      'http://localhost:5173',
+      'https://gesto.ovh.com/',
+      'https://www.gesto.ovh/',
+      'https://api.gesto.ovh.com/',
+      'https://www.api.gesto.ovh/',
+    ],
+    credentials: true,
+  });
 
   // Setting up swagger
   const config = new DocumentBuilder()

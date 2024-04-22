@@ -13,6 +13,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/users/user.schema';
 import { HasherService } from 'src/hasher/hasher.service';
 import { JwtRefreshStrategy } from './Jwt/jwtRefresh.strategy';
+import { MyMongooseUserService } from 'src/external-services/my-mongoose/my-mongoose-user/my-mongoose-user.service';
 
 @Module({
   controllers: [AuthController],
@@ -30,6 +31,7 @@ import { JwtRefreshStrategy } from './Jwt/jwtRefresh.strategy';
     AuthService,
     HasherService,
     LocalStrategy,
+    MyMongooseUserService,
     UsersService,
     JwtStrategy,
     JwtRefreshStrategy,
