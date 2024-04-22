@@ -2,18 +2,21 @@ import {
   Controller,
   Post,
   UseGuards,
-  Request,
   Get,
   Body,
   UsePipes,
   ValidationPipe,
+  Req,
+  Res,
 } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { LocalAuthGuard } from 'src/auth/Passport/local-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from './Jwt/jwt-auth.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
+import JwtRefreshGuard from './Jwt/jwtRefresh-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -25,51 +28,68 @@ export class AuthController {
 
   @Post('register')
   @UsePipes(new ValidationPipe())
-  async register(@Body() createUserDto: CreateUserDto) {
+  async register(@Res() res: Response, @Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
-    return this.authService.login(user);
+    const accessToken = await this.authService.createAccessToken(user.id);
+    const refreshToken = await this.authService.createRefreshToken(user.id);
+
+    return res
+      .cookie('refresh_token', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      })
+      .json({
+        access_token: accessToken,
+        userId: user.userId,
+      });
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Body() createUserDto: CreateUserDto) {
-    const user = await this.usersService.findOneByUsername(
-      createUserDto.username,
-    );
-    return this.authService.login(user);
+  async login(@Res() res: Response, @Body() createUserDto: CreateUserDto) {
+    const user = await this.authService.login(createUserDto);
+    const accessToken = await this.authService.createAccessToken(user.id);
+    const refreshToken = await this.authService.createRefreshToken(user.id);
+
+    return res
+      .cookie('refresh_token', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      })
+      .json({
+        access_token: accessToken,
+        userId: user.userId,
+      });
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req: any) {
+  getProfile(@Req() req: any) {
     return this.usersService.findOneByUsername(req.user.username);
   }
 
-  // @Post('refresh')
-  // async refresh(@Response() res: Response, @Request() req: Request) {
-  //   const oldRefreshToken = req.cookies['refresh_token'];
-  //   const decodedToken =
-  //     await this.authService.decodeRefreshToken(oldRefreshToken);
+  @UseGuards(JwtRefreshGuard)
+  @Get('refresh')
+  async refresh(@Res() res: Response, @Req() req: Request) {
+    const newRefreshToken = await this.authService.createRefreshToken(
+      req.cookies.refresh_token.sub,
+    );
+    const newAccessToken = await this.authService.createAccessToken(
+      req.cookies.refresh_token.sub,
+    );
 
-  //   const newRefreshToken = await this.authService.replaceRefreshToken(
-  //     decodedToken.sub,
-  //     decodedToken.tokenId,
-  //   );
-  //   const newAccessToken = await this.authService.createAccessToken(
-  //     decodedToken.sub,
-  //   );
+    // Set custom expiration time for refresh token (e.g., 7 days)
+    const refreshExpiration = new Date();
+    refreshExpiration.setDate(refreshExpiration.getDate() + 7); // Set expiration to 7 days from now
+    res.cookie('refresh_token', newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      expires: refreshExpiration,
+    });
 
-  //   // Set custom expiration time for refresh token (e.g., 30 days)
-  //   const refreshExpiration = new Date();
-  //   refreshExpiration.setDate(refreshExpiration.getDate() + 30); // Set expiration to 30 days from now
-
-  //   res.cookie('refresh_token', newRefreshToken, {
-  //     httpOnly: true,
-  //     secure: true,
-  //     sameSite: 'strict',
-  //     expires: refreshExpiration,
-  //   });
-
-  //   return res.send({ access_token: newAccessToken });
-  // }
+    return res.send({ access_token: newAccessToken });
+  }
 }

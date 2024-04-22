@@ -1,5 +1,6 @@
 export default () => ({
   jwtSecret: process.env.JWT_SECRET || 'no secret',
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'no secret',
   apiPort: parseInt(process.env.API_PORT || 'no port', 10) || 3001,
   database: {
     host: process.env.DATABASE_URI,

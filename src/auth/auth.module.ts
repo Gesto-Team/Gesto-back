@@ -12,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/users/user.schema';
 import { HasherService } from 'src/hasher/hasher.service';
+import { JwtRefreshStrategy } from './Jwt/jwtRefresh.strategy';
 
 @Module({
   controllers: [AuthController],
@@ -31,6 +32,7 @@ import { HasherService } from 'src/hasher/hasher.service';
     LocalStrategy,
     UsersService,
     JwtStrategy,
+    JwtRefreshStrategy,
   ],
 })
 export class AuthModule {}

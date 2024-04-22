@@ -5,10 +5,12 @@ import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
 import * as cors from 'cors';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.use(cookieParser());
   app.use(cors());
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());

@@ -13,7 +13,7 @@ export class UsersService {
     private hasherService: HasherService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<any> {
     const createdUser = new this.userModel({
       username: createUserDto.username,
       password: await this.hasherService.hash(createUserDto.password),
