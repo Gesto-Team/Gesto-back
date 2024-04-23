@@ -46,6 +46,7 @@ jobs:
             echo DATABASE_PORT=${{ secrets.DATABASE_PORT }} >> /var/www/cyril/.env
             echo DATABASE_URI=${{ secrets.DATABASE_URI }} >> /var/www/cyril/.env
             echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> /var/www/cyril/.env
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker stop gesto-back
             docker rm gesto-back
             docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
