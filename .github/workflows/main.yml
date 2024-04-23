@@ -48,6 +48,7 @@ jobs:
             echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> /var/www/cyril/.env
             docker stop gesto-back
             docker rm gesto-back
+            docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
             docker stop mongodb
             docker rm mongodb
             cd /var/www/cyril/
