@@ -7,4 +7,5 @@ export default () => ({
     port: parseInt(process.env.DATABASE_PORT || 'no port', 10) || 27017,
     name: process.env.DATABASE_NAME,
   },
+  clientUrl: process.env.CLIENT_URL || 'no client url defined',
 });

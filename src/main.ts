@@ -14,13 +14,7 @@ async function bootstrap() {
   app.use(xss());
 
   app.enableCors({
-    origin: [
-      'http://localhost:5173',
-      'https://gesto.ovh.com/',
-      'https://www.gesto.ovh/',
-      'https://api.gesto.ovh.com/',
-      'https://www.api.gesto.ovh/',
-    ],
+    origin: [configuration().clientUrl],
     credentials: true,
   });
 
