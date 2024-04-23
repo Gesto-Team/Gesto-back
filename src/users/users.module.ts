@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './user.schema';
 import { HasherService } from 'src/hasher/hasher.service';
-import { MyMongooseUserService } from 'src/external-services/my-mongoose/my-mongoose-user/my-mongoose-user.service';
+import { MongooseUserService } from 'src/external-services/mongoose-user/mongoose-user.service';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { MyMongooseUserService } from 'src/external-services/my-mongoose/my-mong
   providers: [
     UsersService,
     AuthService,
-    MyMongooseUserService,
+    MongooseUserService,
     HasherService,
     JwtService,
   ],

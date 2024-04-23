@@ -1,17 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, UpdateQuery } from 'mongoose';
+import { User } from 'src/users/user.schema';
+import { InjectModel } from '@nestjs/mongoose';
 import ICrud from 'src/interfaces/crud.interface';
 
 @Injectable()
-export class MyMongooseService<M> implements ICrud<M> {
-  constructor(private model: Model<M>) {}
+export class MongooseUserService implements ICrud<User> {
+  constructor(@InjectModel(User.name) private model: Model<User>) {}
+
+  // CRUD METHODS
 
   /**
+   *
+   *
    * Create a document
    * @param data document data
    * @returns created document
    */
-  async create(data: M): Promise<any> {
+  async create(data: User): Promise<any> {
     const createdObject = new this.model({
       ...data,
     });
@@ -24,7 +30,7 @@ export class MyMongooseService<M> implements ICrud<M> {
    * @param data document data
    * @returns updated document
    */
-  async update(id: string, data: UpdateQuery<M>): Promise<any> {
+  async update(id: string, data: UpdateQuery<User>): Promise<any> {
     const updatedObject = await this.model.findByIdAndUpdate(id, data, {
       new: true,
     });
@@ -63,5 +69,11 @@ export class MyMongooseService<M> implements ICrud<M> {
    */
   async findOne(id: string): Promise<any> {
     return this.model.findById(id).exec();
+  }
+
+  // CUSTOM METHODS
+
+  async findOneByUsername(username: string): Promise<User | null> {
+    return this.model.findOne({ username: username }).exec();
   }
 }
