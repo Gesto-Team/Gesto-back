@@ -13,10 +13,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(xss());
 
-  console.log(configuration().clientUrl);
+  console.log('client url:', configuration().clientUrl);
 
   app.enableCors({
-    origin: true,
+    origin: [configuration().clientUrl],
     credentials: true,
   });
 
