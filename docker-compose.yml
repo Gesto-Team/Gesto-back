@@ -23,7 +23,6 @@ services:
     restart: always
     ports:
       - '27017:27017'
-    command: mongod --bind_ip 0.0.0.0
     environment:
       MONGO_INITDB_DATABASE: gestodb
     volumes:
