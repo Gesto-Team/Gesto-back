@@ -20,6 +20,7 @@ async function bootstrap() {
       'http://localhost:3001',
       'http://localhost:5173',
       'http://gesto.ovh/',
+      'http://gesto.ovh/login',
       'http://www.gesto.ovh/',
       'http://api.gesto.ovh/',
       'http://www.api.gesto.ovh/',
