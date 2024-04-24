@@ -7,26 +7,16 @@ import * as cookieParser from 'cookie-parser';
 import { xss } from 'express-xss-sanitizer';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      origin: false,
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      preflightContinue: false,
-      optionsSuccessStatus: 204,
-      credentials: true,
-    },
-  });
+  const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.use(xss());
 
-  console.log('client url:', configuration().clientUrl);
-
-  // app.enableCors({
-  //   origin: [configuration().clientUrl],
-  //   credentials: true,
-  // });
+  app.enableCors({
+    origin: [configuration().clientUrl],
+    credentials: true,
+  });
 
   // Setting up swagger
   const config = new DocumentBuilder()
