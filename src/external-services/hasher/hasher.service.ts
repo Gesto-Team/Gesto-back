@@ -11,7 +11,7 @@ export class HasherService implements IHasher {
    * @param value password
    * @returns hashed password
    */
-  async hash(value: string): Promise<string> {
+  public async hash(value: string): Promise<string> {
     return hash(value, HasherService.SALT_ROUNDS);
   }
 
@@ -21,7 +21,7 @@ export class HasherService implements IHasher {
    * @param hash hashed password stored in database
    * @returns true if password is correct, false otherwise
    */
-  async compare(value: string, hash: string): Promise<boolean> {
+  public async compare(value: string, hash: string): Promise<boolean> {
     return compare(value, hash);
   }
 }

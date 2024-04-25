@@ -9,7 +9,7 @@ export class SeedController {
   constructor(private readonly seedService: SeedService) {}
 
   @Post('users')
-  seed(@Body() nbSeeds: SeedUserDto) {
+  public seed(@Body() nbSeeds: SeedUserDto) {
     return this.seedService.seedUsers(nbSeeds);
   }
 }
