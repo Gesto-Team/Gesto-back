@@ -6,15 +6,15 @@ import { Company } from './companies.schema';
 import { Model } from 'mongoose';
 import { MongooseCompanyService } from 'src/external-services/mongoose-companies/mongoose-companies.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import * as nodemailer from 'nodemailer';
+// import * as nodemailer from 'nodemailer';
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-      user: process.env.email,
-      pass: process.env.mdp
-  }
-});
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: process.env.email,
+//     pass: process.env.mdp,
+//   },
+// });
 
 @Injectable()
 export class CompaniesService {
@@ -23,12 +23,11 @@ export class CompaniesService {
     private mgCompanyService: MongooseCompanyService,
   ) {}
 
-
   create(createCompanyDto: CreateCompanyDto) {
     return this.mgCompanyService.create({
       name: createCompanyDto.name,
       email: createCompanyDto.email,
-      monthlyWaste: createCompanyDto.monthlyWaste
+      monthlyWaste: createCompanyDto.monthlyWaste,
     });
   }
 
@@ -44,7 +43,10 @@ export class CompaniesService {
     return this.mgCompanyService.findAll();
   }
 
-  async update(id: string, updateCompanyDto: UpdateCompanyDto): Promise<Company> {
+  async update(
+    id: string,
+    updateCompanyDto: UpdateCompanyDto,
+  ): Promise<Company> {
     return this.mgCompanyService.update(id, updateCompanyDto);
   }
 
@@ -52,27 +54,27 @@ export class CompaniesService {
     return this.mgCompanyService.delete(id);
   }
 
-  @Cron('0 0 1 * *', {name: 'Emailing'})
+  @Cron(CronExpression.EVERY_10_SECONDS)
   async handleCron() {
-  try {
-    console.log('start emailing')
-    const companies = await this.findAll();
-  
-    // companies.forEach(e =>{
-    //     let mailOptions = {
-    //       from: process.env.email,
-    //       to: e.email, 
-    //       subject: 'Réduction de gaspillage mensuel',
-    //       text: 'Bonjour ' + e.name + ', votre gaspillage alimentaire a réduit de ' + e.monthlyWaste + ' ce mois-ci.'
-    //     };
+    try {
+      console.log('start emailing');
+      // const companies = await this.findAll();
 
-    //     transporter.sendMail(mailOptions, (err, info) => {
-    //       if (err) console.log(err);
-    //       else console.log('Email envoyé: ' + info.response);
-    //     });
-    //   })
-  } catch (e) {
+      // companies.forEach(e =>{
+      //     let mailOptions = {
+      //       from: process.env.email,
+      //       to: e.email,
+      //       subject: 'Réduction de gaspillage mensuel',
+      //       text: 'Bonjour ' + e.name + ', votre gaspillage alimentaire a réduit de ' + e.monthlyWaste + ' ce mois-ci.'
+      //     };
+
+      //     transporter.sendMail(mailOptions, (err, info) => {
+      //       if (err) console.log(err);
+      //       else console.log('Email envoyé: ' + info.response);
+      //     });
+      //   })
+    } catch (e) {
       console.error(e);
-  }
+    }
   }
 }

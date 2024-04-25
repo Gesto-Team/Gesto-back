@@ -11,7 +11,6 @@ import { MongooseModule } from '@nestjs/mongoose';
     UsersModule,
     AuthModule,
     SeedModule,
-    ScheduleModule.forRoot(),
     ConfigModule.forRoot({ load: [configuration] }),
     MongooseModule.forRoot(
       `${configuration().database.host}:${configuration().database.port}/${configuration().database.name}`,
