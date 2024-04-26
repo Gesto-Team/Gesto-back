@@ -5,16 +5,18 @@ import { SeedModule } from './routes/seed/seed.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   imports: [
-    UsersModule,
     AuthModule,
-    SeedModule,
+    CompaniesModule,
     ConfigModule.forRoot({ load: [configuration] }),
     MongooseModule.forRoot(
       `${configuration().database.host}:${configuration().database.port}/${configuration().database.name}`,
     ),
+    SeedModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
