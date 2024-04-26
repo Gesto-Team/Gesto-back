@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -29,6 +37,6 @@ export class CompaniesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.companiesService.remove(id);
+    return this.companiesService.delete(id);
   }
 }

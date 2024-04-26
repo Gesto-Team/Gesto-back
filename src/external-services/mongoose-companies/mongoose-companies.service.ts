@@ -1,23 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, UpdateQuery } from 'mongoose';
-import { Company } from 'src/companies/companies.schema';
+import { Company, CompanyDocument } from 'src/companies/companies.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import ICrud from 'src/interfaces/crud.interface';
 
 @Injectable()
-export class MongooseCompanyService implements ICrud<Company> {
+export class MongooseCompanyService implements ICrud<CompanyDocument> {
   constructor(@InjectModel(Company.name) private model: Model<Company>) {}
 
-  // CRUD METHODS
+  /**************************************************************************
+   * CRUD METHODS************************************************************
+   **************************************************************************/
 
   /**
-   *
-   *
-   * Create a document
-   * @param data document data
-   * @returns created document
+   * Create a company
+   * @param data company data
+   * @returns created company
    */
-  async create(data: Company): Promise<any> {
+  public async create(data: Company): Promise<any> {
     const createdObject = new this.model({
       ...data,
     });
@@ -25,12 +25,12 @@ export class MongooseCompanyService implements ICrud<Company> {
   }
 
   /**
-   * Update a document
-   * @param id document id
-   * @param data document data
-   * @returns updated document
+   * Update a company
+   * @param id company id
+   * @param data company data
+   * @returns updated company
    */
-  async update(id: string, data: UpdateQuery<Company>): Promise<any> {
+  public async update(id: string, data: UpdateQuery<Company>): Promise<any> {
     const updatedObject = await this.model.findByIdAndUpdate(id, data, {
       new: true,
     });
@@ -41,12 +41,11 @@ export class MongooseCompanyService implements ICrud<Company> {
   }
 
   /**
-   * Delete a document
-   * @param id document id
-   * @returns deleted document
+   * Delete a company
+   * @param id company id
+   * @returns deleted company
    */
-
-  async delete(id: string): Promise<any> {
+  public async delete(id: string): Promise<any> {
     const deletedObject = await this.model.findByIdAndDelete(id);
     if (!deletedObject) {
       throw new NotFoundException(`Company #${id} not found`);
@@ -55,25 +54,34 @@ export class MongooseCompanyService implements ICrud<Company> {
   }
 
   /**
-   * Find all documents
-   * @returns all documents
+   * Find all companies
+   * @returns all companies
    */
-  async findAll(): Promise<any[]> {
+  public async findAll(): Promise<CompanyDocument[]> {
     return this.model.find().exec();
   }
 
   /**
-   * Find a document by id
-   * @param id document id
-   * @returns document
+   * Find a company by id
+   * @param id company id
+   * @returns company
    */
-  async findOne(id: string): Promise<any> {
+  public async findOne(id: string): Promise<CompanyDocument | null> {
     return this.model.findById(id).exec();
   }
 
-  // CUSTOM METHODS
+  /**************************************************************************
+   * CUSTOM METHODS**********************************************************
+   * ***********************************************************************/
 
-  async findOneByCompanyName(name: string): Promise<Company | null> {
+  /**
+   * Find a company by name
+   * @param name company name
+   * @returns company
+   */
+  public async findOneByCompanyName(
+    name: string,
+  ): Promise<CompanyDocument | null> {
     return this.model.findOne({ name: name }).exec();
   }
 }

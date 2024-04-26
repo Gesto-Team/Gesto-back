@@ -23,7 +23,12 @@ export class CompaniesService {
     private mgCompanyService: MongooseCompanyService,
   ) {}
 
-  create(createCompanyDto: CreateCompanyDto) {
+  /**
+   * Create a new company
+   * @param createCompanyDto company data
+   * @returns new company
+   */
+  public create(createCompanyDto: CreateCompanyDto) {
     return this.mgCompanyService.create({
       name: createCompanyDto.name,
       email: createCompanyDto.email,
@@ -31,31 +36,59 @@ export class CompaniesService {
     });
   }
 
-  async findOne(id: string): Promise<Company | null> {
+  /**
+   * Find one company
+   * @param id
+   * @returns company
+   */
+  public async findOne(id: string): Promise<Company | null> {
     return this.mgCompanyService.findOne(id);
   }
 
-  async findOneByCompanyName(name: string): Promise<Company | null> {
+  /**
+   * Find one company by name
+   * @param name
+   * @returns company
+   */
+  public async findOneByCompanyName(name: string): Promise<Company | null> {
     return this.mgCompanyService.findOneByCompanyName(name);
   }
 
-  async findAll(): Promise<Company[]> {
+  /**
+   * Find all companies
+   * @returns companies
+   */
+  public async findAll(): Promise<Company[]> {
     return this.mgCompanyService.findAll();
   }
 
-  async update(
+  /**
+   * Update a company
+   * @param id
+   * @param updateCompanyDto company data
+   * @returns updated company
+   */
+  public async update(
     id: string,
     updateCompanyDto: UpdateCompanyDto,
   ): Promise<Company> {
     return this.mgCompanyService.update(id, updateCompanyDto);
   }
 
-  async remove(id: string): Promise<Company> {
+  /**
+   * Remove a company
+   * @param id
+   * @returns removed company
+   */
+  public async delete(id: string): Promise<Company> {
     return this.mgCompanyService.delete(id);
   }
 
+  /**
+   * Send email to companies every 10 seconds
+   */
   @Cron(CronExpression.EVERY_10_SECONDS)
-  async handleCron() {
+  public async handleCron() {
     try {
       console.log('start emailing');
       // const companies = await this.findAll();
