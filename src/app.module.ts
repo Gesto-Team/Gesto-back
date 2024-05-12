@@ -5,7 +5,7 @@ import { SeedModule } from './routes/seed/seed.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CompaniesModule } from './companies/companies.module';
+import { CompaniesModule } from './routes/companies/companies.module';
 
 @Module({
   imports: [

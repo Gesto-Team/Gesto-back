@@ -9,5 +9,5 @@ export class UpdateCompanyDto {
   email: string;
 
   @IsOptional()
-  monthlyWaste: string
+  monthlyWaste: string;
 }

@@ -9,5 +9,5 @@ export class CreateCompanyDto {
   email: string = 'example@example.com';
 
   @IsOptional()
-  monthlyWaste: string = '12,6%';
+  monthlyWaste: string = '12.6%';
 }

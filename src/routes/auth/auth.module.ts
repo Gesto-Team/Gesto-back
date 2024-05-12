@@ -11,7 +11,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { JwtRefreshStrategy } from './Jwt/jwtRefresh.strategy';
 import { MongooseUserService } from 'src/external-services/mongoose-user/mongoose-user.service';
 import { UsersModule } from '../users/users.module';
-import { User, UserSchema } from '../users/user.schema';
+import { User, UserSchema } from '../../schemas/user.schema';
 import { HasherService } from 'src/external-services/hasher/hasher.service';
 import { UsersService } from '../users/users.service';
 
