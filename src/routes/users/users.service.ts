@@ -27,6 +27,8 @@ export class UsersService {
         `${createUserDto.username} has already been taken`,
       );
     }
+    console.log('pass', createUserDto.password);
+
     return this.mgUserService.create({
       username: createUserDto.username,
       password: await this.hasherService.hash(createUserDto.password),
