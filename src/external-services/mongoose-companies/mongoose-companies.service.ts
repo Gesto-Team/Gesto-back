@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, UpdateQuery } from 'mongoose';
-import { Company, CompanyDocument } from 'src/companies/companies.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import ICrud from 'src/interfaces/crud.interface';
+import { Company, CompanyDocument } from 'src/schemas/companies.schema';
 
 @Injectable()
 export class MongooseCompanyService implements ICrud<CompanyDocument> {

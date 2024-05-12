@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, UpdateQuery } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import ICrud from 'src/interfaces/crud.interface';
-import { User, UserDocument } from 'src/routes/users/user.schema';
+import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class MongooseUserService implements ICrud<UserDocument> {

@@ -8,4 +8,6 @@ export default () => ({
     name: process.env.DATABASE_NAME,
   },
   clientUrl: process.env.CLIENT_URL || 'no client url defined',
+  gestoSupportEmail: process.env.GESTO_SUPPORT_EMAIL || 'no email',
+  gestoSupportPassword: process.env.GESTO_SUPPORT_PASSWORD || 'no password',
 });

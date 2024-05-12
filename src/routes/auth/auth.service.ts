@@ -4,7 +4,7 @@ import configuration from 'src/config/configuration';
 import { UsersService } from '../users/users.service';
 import { HasherService } from 'src/external-services/hasher/hasher.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { UserDocument } from '../users/user.schema';
+import { UserDocument } from '../../schemas/user.schema';
 import { AuthResponse, TokenResponse } from './auth.interface';
 
 @Injectable()

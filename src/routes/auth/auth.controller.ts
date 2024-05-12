@@ -16,7 +16,7 @@ import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LocalAuthGuard } from './Passport/local-auth.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { UserDocument } from '../users/user.schema';
+import { UserDocument } from '../../schemas/user.schema';
 
 @ApiTags('auth')
 @Controller('auth')
