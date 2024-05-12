@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import configuration from 'src/config/configuration';
 import { UsersService } from '../users/users.service';
@@ -29,12 +29,8 @@ export class AuthService {
    * @param user
    * @returns access_token and refresh_token
    */
-  public async login(createUserDto: CreateUserDto): Promise<AuthResponse> {
-    const user = await this.validateUser(
-      createUserDto.username,
-      createUserDto.password,
-    );
-    return { ...this._generateTokens(user.id), userId: user.id };
+  public async login(@Request() req: any): Promise<AuthResponse> {
+    return { ...this._generateTokens(req.id), userId: req.id };
   }
 
   /**
@@ -73,6 +69,8 @@ export class AuthService {
       pass,
       user.password,
     );
+    console.log('passaze', pass);
+
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
     }
