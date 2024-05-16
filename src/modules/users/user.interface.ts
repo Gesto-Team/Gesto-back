@@ -1,10 +1,10 @@
-import { UserDocument } from './user.schema';
+import { User } from './user.schema';
 
 export abstract class UserProvider {
-  create: (data: Partial<UserDocument>) => Promise<UserDocument>;
-  update: (id: string, data: Partial<UserDocument>) => Promise<UserDocument>;
+  create: (data: Partial<User>) => Promise<User>;
+  update: (id: string, data: Partial<User>) => Promise<User>;
   delete: (id: string) => Promise<any>;
-  findAll: () => Promise<UserDocument[] | null[]>;
-  findOne: (id: string) => Promise<UserDocument | null>;
-  findOneByUsername: (name: string) => Promise<UserDocument | null>;
+  findAll: () => Promise<User[] | null[]>;
+  findOne: (id: string) => Promise<User | null>;
+  findOneByUsername: (name: string) => Promise<User | null>;
 }

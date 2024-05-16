@@ -6,8 +6,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Company, CompanyDocument, CompanySchema } from './companies.schema';
 import { ScheduleModule } from '@nestjs/schedule';
 import { NodeMailerService } from 'src/modules/companies/mailer/nodemailer.service';
-import { CrudProvider } from 'src/interface/crud.interface';
 import { MailerProvider } from './mailer/mailer.interface';
+import { CompanyProvider } from './companies.interface';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { MailerProvider } from './mailer/mailer.interface';
   providers: [
     CompaniesService,
     {
-      provide: CrudProvider<CompanyDocument>,
+      provide: CompanyProvider<CompanyDocument>,
       useClass: MongooseCompanyService,
     },
     {

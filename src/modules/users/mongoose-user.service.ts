@@ -1,18 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, UpdateQuery } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from 'src/modules/users/user.schema';
-import { CrudProvider } from 'src/interface/crud.interface';
+import { User } from './user.schema';
+import { UserProvider } from './user.interface';
 
 @Injectable()
-export class MongooseUserService implements CrudProvider<UserDocument> {
+export class MongooseUserService implements UserProvider {
   constructor(@InjectModel(User.name) private model: Model<User>) {}
   /**
    * Create a user
    * @param data user data
    * @returns created user
    */
-  public async create(data: User): Promise<UserDocument> {
+  public async create(data: User): Promise<User> {
     return new this.model({
       ...data,
     }).save();
@@ -48,7 +48,7 @@ export class MongooseUserService implements CrudProvider<UserDocument> {
    * Find all users
    * @returns all users
    */
-  public async findAll(): Promise<UserDocument[]> {
+  public async findAll(): Promise<User[]> {
     return this.model.find().exec();
   }
 
@@ -57,7 +57,7 @@ export class MongooseUserService implements CrudProvider<UserDocument> {
    * @param id user id
    * @returns user
    */
-  public async findOne(id: string): Promise<UserDocument | null> {
+  public async findOne(id: string): Promise<User | null> {
     return this.model.findById(id).exec();
   }
   /**
@@ -65,7 +65,7 @@ export class MongooseUserService implements CrudProvider<UserDocument> {
    * @param username user username
    * @returns user
    */
-  public async findOneByName(username: string): Promise<UserDocument | null> {
+  public async findOneByUsername(username: string): Promise<User | null> {
     return this.model.findOne({ username: username }).exec();
   }
 }

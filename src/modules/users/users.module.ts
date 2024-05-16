@@ -3,9 +3,9 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserDocument, UserSchema } from './user.schema';
+import { User, UserSchema } from './user.schema';
 import { MongooseUserService } from './mongoose-user.service';
-import { CrudProvider } from 'src/interface/crud.interface';
+import { UserProvider } from './user.interface';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { CrudProvider } from 'src/interface/crud.interface';
   providers: [
     UsersService,
     {
-      provide: CrudProvider<UserDocument>,
+      provide: UserProvider,
       useClass: MongooseUserService,
     },
     JwtService,

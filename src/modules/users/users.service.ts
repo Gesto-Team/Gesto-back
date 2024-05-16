@@ -5,12 +5,11 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CrudProvider } from 'src/interface/crud.interface';
-import { UserDocument } from './user.schema';
+import { UserProvider } from './user.interface';
 
 @Injectable()
 export class UsersService {
-  constructor(private mgUserService: CrudProvider<UserDocument>) {}
+  constructor(private mgUserService: UserProvider) {}
 
   /**
    * Create a user
@@ -75,6 +74,6 @@ export class UsersService {
    * @returns user
    */
   public async findOneByUsername(username: string): Promise<any> {
-    return this.mgUserService.findOneByName(username);
+    return this.mgUserService.findOneByUsername(username);
   }
 }
