@@ -18,6 +18,9 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // log all env variables
+  console.log('ENVIRONMENT VARIABLES:', configuration());
+
   // Setting up swagger
   const config = new DocumentBuilder()
     .setTitle('My nest API')
