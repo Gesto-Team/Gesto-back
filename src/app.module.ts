@@ -13,7 +13,7 @@ import { UsersModule } from './modules/users/users.module';
     CompaniesModule,
     ConfigModule.forRoot({ load: [configuration] }),
     MongooseModule.forRoot(
-      `${configuration().database.host}:${configuration().database.port}/${configuration().database.name}`,
+      `${configuration().database.host}/${configuration().database.name}`,
     ),
     SeedModule,
     UsersModule,
