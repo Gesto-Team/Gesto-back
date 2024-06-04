@@ -3,13 +3,13 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company, CompanyDocument } from './companies.schema';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { CrudProvider } from 'src/interface/crud.interface';
 import { MailerProvider } from './mailer/mailer.interface';
+import { CompanyProvider } from './companies.interface';
 
 @Injectable()
 export class CompaniesService {
   constructor(
-    private mgCompanyService: CrudProvider<CompanyDocument>,
+    private mgCompanyService: CompanyProvider<CompanyDocument>,
     private nodeMailerService: MailerProvider<CompanyDocument>,
   ) {}
 
@@ -71,7 +71,7 @@ export class CompaniesService {
    * @returns company
    */
   public async findOneByCompanyName(name: string): Promise<any> {
-    return this.mgCompanyService.findOneByName(name);
+    return this.mgCompanyService.findOneByCompanyName(name);
   }
 
   /**

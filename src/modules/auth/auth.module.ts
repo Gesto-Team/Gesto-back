@@ -11,11 +11,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { JwtRefreshStrategy } from './Jwt/jwtRefresh.strategy';
 import { MongooseUserService } from 'src/modules/users/mongoose-user.service';
 import { UsersModule } from '../users/users.module';
-import { User, UserDocument, UserSchema } from '../users/user.schema';
+import { User, UserSchema } from '../users/user.schema';
 import { HasherService } from 'src/modules/auth/hasher/hasher.service';
 import { UsersService } from '../users/users.service';
-import { CrudProvider } from 'src/interface/crud.interface';
 import HasherProvider from './hasher/hasher.interface';
+import { UserProvider } from '../users/user.interface';
 
 @Module({
   controllers: [AuthController],
@@ -34,7 +34,7 @@ import HasherProvider from './hasher/hasher.interface';
     LocalStrategy,
     UsersService,
     {
-      provide: CrudProvider<UserDocument>,
+      provide: UserProvider,
       useClass: MongooseUserService,
     },
     {

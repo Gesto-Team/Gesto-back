@@ -5,10 +5,12 @@ import {
   Company,
   CompanyDocument,
 } from 'src/modules/companies/companies.schema';
-import { CrudProvider } from 'src/interface/crud.interface';
+import { CompanyProvider } from './companies.interface';
 
 @Injectable()
-export class MongooseCompanyService implements CrudProvider<CompanyDocument> {
+export class MongooseCompanyService
+  implements CompanyProvider<CompanyDocument>
+{
   constructor(@InjectModel(Company.name) private model: Model<Company>) {}
 
   /**************************************************************************
@@ -78,7 +80,9 @@ export class MongooseCompanyService implements CrudProvider<CompanyDocument> {
    * @param name company name
    * @returns company
    */
-  public async findOneByName(name: string): Promise<CompanyDocument | null> {
+  public async findOneByCompanyName(
+    name: string,
+  ): Promise<CompanyDocument | null> {
     return this.model.findOne({ name: name }).exec();
   }
 }
