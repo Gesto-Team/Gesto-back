@@ -62,8 +62,8 @@ export class UsersService {
    */
   public async findOne(id: string): Promise<any> {
     const user = this.mgUserService.findOne(id);
-    if (!user) {
-      throw new NotFoundException(`User #${id} not found`);
+    if (!(await user)) {
+      throw new NotFoundException(`User #${id} is not found`);
     }
     return user;
   }
@@ -74,6 +74,10 @@ export class UsersService {
    * @returns user
    */
   public async findOneByUsername(username: string): Promise<any> {
-    return this.mgUserService.findOneByUsername(username);
+    const user = this.mgUserService.findOneByUsername(username);
+    if (!(await user)) {
+      throw new NotFoundException(`User #${username} is not found`);
+    }
+    return user;
   }
 }

@@ -1,7 +1,7 @@
-export const testUsers = [
+export const Users = [
   {
-    username: 'username',
-    password: 'password',
+    username: 'username1',
+    password: 'password1',
   },
   {
     username: 'username2',

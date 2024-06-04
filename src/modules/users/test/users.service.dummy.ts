@@ -18,4 +18,8 @@ export class MongooseUsersServiceDummy {
   public async findOne(): Promise<any> {
     throw new Error('Method not implemented');
   }
+
+  public async findOneByUsername(): Promise<any> {
+    throw new Error('Method not implemented');
+  }
 }
