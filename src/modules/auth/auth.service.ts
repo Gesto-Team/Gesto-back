@@ -6,6 +6,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UserDocument } from '../users/user.schema';
 import { AuthResponse, TokenResponse } from './auth.interface';
 import HasherProvider from './hasher/hasher.interface';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable()
 export class AuthService {
@@ -48,8 +49,9 @@ export class AuthService {
     if (!isTokenValid) {
       throw new UnauthorizedException('Invalid token');
     }
+    const userId = jwtDecode(refreshToken);
     return {
-      ...this._generateTokens(refreshToken.sub),
+      ...this._generateTokens(userId.sub ?? 'no id in token'), // Ensure userId.sub is not undefined
       userId: refreshToken.sub,
     };
   }
