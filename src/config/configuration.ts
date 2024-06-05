@@ -7,7 +7,7 @@ export default () => ({
     port: parseInt(process.env.DATABASE_PORT || 'no port', 10) || 27017,
     name: process.env.DATABASE_NAME,
   },
-  clientUrl: process.env.CLIENT_URL || 'no client url defined',
+  clientUrl: process.env.CLIENT_URL || 'localhost:5173',
   gestoSupportEmail: process.env.GESTO_SUPPORT_EMAIL || 'no email',
   gestoSupportPassword: process.env.GESTO_SUPPORT_PASSWORD || 'no password',
 });
