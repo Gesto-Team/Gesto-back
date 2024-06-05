@@ -75,9 +75,6 @@ export class UsersService {
    */
   public async findOneByUsername(username: string): Promise<any> {
     const user = this.mgUserService.findOneByUsername(username);
-    if (!(await user)) {
-      throw new NotFoundException(`User #${username} is not found`);
-    }
     return user;
   }
 }
