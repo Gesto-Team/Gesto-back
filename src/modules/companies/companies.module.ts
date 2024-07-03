@@ -18,7 +18,7 @@ import { CompanyProvider } from './companies.interface';
   providers: [
     CompaniesService,
     {
-      provide: CompanyProvider<CompanyDocument>,
+      provide: CompanyProvider,
       useClass: MongooseCompanyService,
     },
     {

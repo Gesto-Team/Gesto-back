@@ -8,9 +8,7 @@ import {
 import { CompanyProvider } from './companies.interface';
 
 @Injectable()
-export class MongooseCompanyService
-  implements CompanyProvider<CompanyDocument>
-{
+export class MongooseCompanyService implements CompanyProvider {
   constructor(@InjectModel(Company.name) private model: Model<Company>) {}
 
   /**************************************************************************
@@ -22,7 +20,7 @@ export class MongooseCompanyService
    * @param data company data
    * @returns created company
    */
-  public async create(data: Company): Promise<any> {
+  public async create(data: Company): Promise<Company> {
     const createdObject = new this.model({
       ...data,
     });

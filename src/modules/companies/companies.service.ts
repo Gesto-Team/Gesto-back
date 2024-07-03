@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company, CompanyDocument } from './companies.schema';
@@ -9,7 +9,7 @@ import { CompanyProvider } from './companies.interface';
 @Injectable()
 export class CompaniesService {
   constructor(
-    private mgCompanyService: CompanyProvider<CompanyDocument>,
+    private mgCompanyService: CompanyProvider,
     private nodeMailerService: MailerProvider<CompanyDocument>,
   ) {}
 
@@ -18,7 +18,13 @@ export class CompaniesService {
    * @param createCompanyDto company data
    * @returns new company
    */
-  public create(createCompanyDto: CreateCompanyDto): Promise<any> {
+  public async create(createCompanyDto: CreateCompanyDto): Promise<any> {
+    const company = this.findOneByCompanyName(createCompanyDto.name);
+    if (await company) {
+      throw new ConflictException(
+        `${createCompanyDto.name} has already been taken`,
+      );
+    }
     return this.mgCompanyService.create({
       name: createCompanyDto.name,
       email: createCompanyDto.email,
@@ -36,6 +42,10 @@ export class CompaniesService {
     id: string,
     updateCompanyDto: UpdateCompanyDto,
   ): Promise<Company> {
+    const company = this.mgCompanyService.findOne(id);
+    if (!(await company)) {
+      throw new ConflictException(`Company #${id} is not found`);
+    }
     return this.mgCompanyService.update(id, updateCompanyDto);
   }
 
@@ -45,6 +55,10 @@ export class CompaniesService {
    * @returns removed company
    */
   public async delete(id: string): Promise<Company> {
+    const company = this.mgCompanyService.findOne(id);
+    if (!(await company)) {
+      throw new ConflictException(`Company #${id} is not found`);
+    }
     return this.mgCompanyService.delete(id);
   }
 
@@ -62,7 +76,11 @@ export class CompaniesService {
    * @returns company
    */
   public async findOne(id: string): Promise<any> {
-    return this.mgCompanyService.findOne(id);
+    const company = this.mgCompanyService.findOne(id);
+    if (!(await company)) {
+      throw new ConflictException(`Company #${id} is not found`);
+    }
+    return company;
   }
 
   /**
