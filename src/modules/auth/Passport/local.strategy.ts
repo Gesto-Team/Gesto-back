@@ -14,8 +14,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     username: string,
     password: string,
   ): Promise<UserDocument> {
-    console.log('before validate');
-
     return await this.authService.validateUser(username, password);
   }
 }

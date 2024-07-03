@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserProvider } from './user.interface';
@@ -17,8 +13,8 @@ export class UsersService {
    * @returns new user
    */
   public async create(createUserDto: CreateUserDto): Promise<any> {
-    const user = await this.findOneByUsername(createUserDto.username);
-    if (user) {
+    const user = this.findOneByUsername(createUserDto.username);
+    if (await user) {
       throw new ConflictException(
         `${createUserDto.username} has already been taken`,
       );
@@ -33,7 +29,10 @@ export class UsersService {
    * @returns updated user
    */
   public async update(id: string, updateUserDto: UpdateUserDto): Promise<any> {
-    this.findOne(id);
+    const user = this.mgUserService.findOne(id);
+    if (!(await user)) {
+      throw new ConflictException(`User #${id} is not found`);
+    }
     return this.mgUserService.update(id, updateUserDto);
   }
 
@@ -43,7 +42,10 @@ export class UsersService {
    * @returns deleted user
    */
   public async delete(id: string): Promise<any> {
-    this.findOne(id);
+    const user = this.mgUserService.findOne(id);
+    if (!(await user)) {
+      throw new ConflictException(`User #${id} is not found`);
+    }
     return this.mgUserService.delete(id);
   }
 
@@ -63,7 +65,7 @@ export class UsersService {
   public async findOne(id: string): Promise<any> {
     const user = this.mgUserService.findOne(id);
     if (!(await user)) {
-      throw new NotFoundException(`User #${id} is not found`);
+      throw new ConflictException(`User #${id} is not found`);
     }
     return user;
   }

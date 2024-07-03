@@ -4,7 +4,7 @@ import { spyOn } from 'jest-mock';
 import { MongooseUsersServiceDummy } from './users.service.dummy';
 import { Users } from './users.controller.mock';
 import { UserProvider } from '../user.interface';
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -27,6 +27,71 @@ describe('UsersService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should create a user', async () => {
+      const testUser = Users[0];
+      spyOn(mgUserService, 'findOneByUsername').mockImplementation(() =>
+        Promise.resolve(null),
+      );
+      spyOn(mgUserService, 'create').mockImplementation(() =>
+        Promise.resolve(testUser),
+      );
+      const result = await service.create(testUser);
+      expect(result).toBe(testUser);
+    });
+    it('should throw an exception when user already exists', async () => {
+      const testUser = Users[0];
+      spyOn(mgUserService, 'findOneByUsername').mockImplementation(() =>
+        Promise.resolve(testUser),
+      );
+      const result = service.create(testUser);
+      expect(result).rejects.toThrow(ConflictException);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a user', async () => {
+      const testUser = Users[0];
+      spyOn(mgUserService, 'findOne').mockImplementation(() =>
+        Promise.resolve(testUser),
+      );
+      spyOn(mgUserService, 'update').mockImplementation(() =>
+        Promise.resolve(testUser),
+      );
+      const result = await service.update('0', testUser);
+      expect(result).toBe(testUser);
+    });
+    it('should throw an exception when user do not exist', async () => {
+      const testUser = Users[0];
+      spyOn(mgUserService, 'findOne').mockImplementation(() =>
+        Promise.resolve(null),
+      );
+      const result = service.update('0', testUser);
+      expect(result).rejects.toThrow(ConflictException);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a user', async () => {
+      const testUser = Users[0];
+      spyOn(mgUserService, 'findOne').mockImplementation(() =>
+        Promise.resolve(testUser),
+      );
+      spyOn(mgUserService, 'delete').mockImplementation(() =>
+        Promise.resolve(testUser),
+      );
+      const result = await service.delete('0');
+      expect(result).toBe(testUser);
+    });
+    it('should throw an exception when user do not exist', async () => {
+      spyOn(mgUserService, 'findOne').mockImplementation(() =>
+        Promise.resolve(null),
+      );
+      const result = service.delete('0');
+      expect(result).rejects.toThrow(ConflictException);
+    });
   });
 
   describe('findAll', () => {
@@ -55,7 +120,7 @@ describe('UsersService', () => {
         Promise.resolve(testUser),
       );
       const result = service.findOne('1');
-      expect(result).rejects.toThrow(NotFoundException);
+      expect(result).rejects.toThrow(ConflictException);
     });
   });
 
@@ -67,14 +132,6 @@ describe('UsersService', () => {
       );
       const result = await service.findOneByUsername('username1');
       expect(result).toBe(testUser);
-    });
-    it('should throw an exception when no user found', async () => {
-      const testUser = null;
-      spyOn(mgUserService, 'findOneByUsername').mockImplementation(() =>
-        Promise.resolve(testUser),
-      );
-      const result = service.findOneByUsername('username1');
-      expect(result).rejects.toThrow(NotFoundException);
     });
   });
 });

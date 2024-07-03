@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Model, UpdateQuery } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
@@ -38,9 +38,8 @@ export class MongooseUserService implements UserProvider {
 
   public async delete(id: string): Promise<any> {
     const deletedObject = await this.model.findByIdAndDelete(id);
-    if (!deletedObject) {
-      throw new NotFoundException(`User #${id} not found`);
-    }
+    console.log(deletedObject);
+
     return deletedObject;
   }
 
