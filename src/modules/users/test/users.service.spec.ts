@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
 import { spyOn } from 'jest-mock';
 import { MongooseUsersServiceDummy } from './users.service.dummy';
-import { Users } from './users.controller.mock';
+import { UserMock } from './users.service.mock';
 import { UserProvider } from '../user.interface';
 import { ConflictException } from '@nestjs/common';
 
@@ -31,7 +31,7 @@ describe('UsersService', () => {
 
   describe('create', () => {
     it('should create a user', async () => {
-      const testUser = Users[0];
+      const testUser = UserMock[0];
       spyOn(mgUserService, 'findOneByUsername').mockImplementation(() =>
         Promise.resolve(null),
       );
@@ -42,7 +42,7 @@ describe('UsersService', () => {
       expect(result).toBe(testUser);
     });
     it('should throw an exception when user already exists', async () => {
-      const testUser = Users[0];
+      const testUser = UserMock[0];
       spyOn(mgUserService, 'findOneByUsername').mockImplementation(() =>
         Promise.resolve(testUser),
       );
@@ -53,7 +53,7 @@ describe('UsersService', () => {
 
   describe('update', () => {
     it('should update a user', async () => {
-      const testUser = Users[0];
+      const testUser = UserMock[0];
       spyOn(mgUserService, 'findOne').mockImplementation(() =>
         Promise.resolve(testUser),
       );
@@ -64,7 +64,7 @@ describe('UsersService', () => {
       expect(result).toBe(testUser);
     });
     it('should throw an exception when user do not exist', async () => {
-      const testUser = Users[0];
+      const testUser = UserMock[0];
       spyOn(mgUserService, 'findOne').mockImplementation(() =>
         Promise.resolve(null),
       );
@@ -75,7 +75,7 @@ describe('UsersService', () => {
 
   describe('delete', () => {
     it('should delete a user', async () => {
-      const testUser = Users[0];
+      const testUser = UserMock[0];
       spyOn(mgUserService, 'findOne').mockImplementation(() =>
         Promise.resolve(testUser),
       );
@@ -96,7 +96,7 @@ describe('UsersService', () => {
 
   describe('findAll', () => {
     it('should return all users', async () => {
-      const testUsers = [...Users];
+      const testUsers = [...UserMock];
       spyOn(mgUserService, 'findAll').mockImplementation(() =>
         Promise.resolve(testUsers),
       );
@@ -107,7 +107,7 @@ describe('UsersService', () => {
 
   describe('findOne', () => {
     it('should return a user', async () => {
-      const testUser = Users[0];
+      const testUser = UserMock[0];
       spyOn(mgUserService, 'findOne').mockImplementation(() =>
         Promise.resolve(testUser),
       );
@@ -126,11 +126,11 @@ describe('UsersService', () => {
 
   describe('findOneByUsername', () => {
     it('should return a user', async () => {
-      const testUser = Users[0];
+      const testUser = UserMock[0];
       spyOn(mgUserService, 'findOneByUsername').mockImplementation(() =>
         Promise.resolve(testUser),
       );
-      const result = await service.findOneByUsername('username1');
+      const result = await service.findOneByUsername(testUser.username);
       expect(result).toBe(testUser);
     });
   });

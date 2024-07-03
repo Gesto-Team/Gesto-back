@@ -1,8 +1,10 @@
-export abstract class CompanyProvider<M> {
-  create: (data: Partial<M>) => Promise<M>;
-  update: (id: string, data: Partial<M>) => Promise<M>;
+import { Company } from './companies.schema';
+
+export abstract class CompanyProvider {
+  create: (data: Partial<Company>) => Promise<Company>;
+  update: (id: string, data: Partial<Company>) => Promise<Company>;
   delete: (id: string) => Promise<any>;
-  findAll: () => Promise<M[] | null[]>;
-  findOne: (id: string) => Promise<M | null>;
-  findOneByCompanyName: (name: string) => Promise<M | null>;
+  findAll: () => Promise<Company[] | null[]>;
+  findOne: (id: string) => Promise<Company | null>;
+  findOneByCompanyName: (name: string) => Promise<Company | null>;
 }
