@@ -130,4 +130,15 @@ describe('CompaniesService', () => {
       expect(result).rejects.toThrow(ConflictException);
     });
   });
+
+  describe('findOneByCompanyName', () => {
+    it('should return a user', async () => {
+      const testCompany = CompanyMock[0];
+      spyOn(mgCompanyService, 'findOneByCompanyName').mockImplementation(() =>
+        Promise.resolve(testCompany),
+      );
+      const result = await service.findOneByCompanyName(testCompany.name);
+      expect(result).toBe(testCompany);
+    });
+  });
 });
