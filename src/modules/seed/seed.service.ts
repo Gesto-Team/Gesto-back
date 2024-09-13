@@ -3,12 +3,14 @@ import { faker } from '@faker-js/faker';
 import { SeedDto } from './dto/seed.dto';
 import { MongooseUserService } from 'src/modules/users/mongoose-user.service';
 import { MongooseCompanyService } from 'src/modules/companies/mongoose-companies.service';
+import { MongooseProductService } from '../products/mongoose-products.service';
 
 @Injectable()
 export class SeedService {
   constructor(
     private mgUserService: MongooseUserService,
     private mgCompanyService: MongooseCompanyService,
+    private mgProductService: MongooseProductService,
   ) {}
 
   /**
@@ -41,5 +43,25 @@ export class SeedService {
       fakerCompany,
     );
     return companies.map((company) => this.mgCompanyService.create(company));
+  }
+
+  /**
+   * Seed products in database
+   * @param seedProductDto nbSeeds
+   * @returns nbSeeds products
+   */
+  public async seedProducts(seedProductDto: SeedDto) {
+    const fakerProduct = (): any => ({
+      name: faker.commerce.productName(),
+      price: faker.commerce.price(),
+      unit: 'kg',
+      expirationDate: faker.date.future(),
+      quantity: faker.number.int({ max: 100 }),
+    });
+    const products = Array.from(
+      { length: seedProductDto.nbSeeds },
+      fakerProduct,
+    );
+    return products.map((product) => this.mgProductService.create(product));
   }
 }

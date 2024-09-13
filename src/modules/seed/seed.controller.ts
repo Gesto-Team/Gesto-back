@@ -17,4 +17,9 @@ export class SeedController {
   public seedCompanies(@Body() nbSeeds: SeedDto) {
     return this.seedService.seedCompanies(nbSeeds);
   }
+
+  @Post('products')
+  public seedProducts(@Body() nbSeeds: SeedDto) {
+    return this.seedService.seedProducts(nbSeeds);
+  }
 }
