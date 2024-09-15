@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import configuration from 'src/config/configuration';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { UserDocument } from '../users/user.schema';
+import { Role, UserDocument } from '../users/user.schema';
 import { AuthResponse, TokenResponse } from './auth.interface';
 import HasherProvider from './hasher/hasher.interface';
 import { jwtDecode } from 'jwt-decode';
@@ -24,8 +24,13 @@ export class AuthService {
     const user = await this.usersService.create({
       username: createUserDto.username,
       password: await this.hasherService.hash(createUserDto.password),
+      role: Role.USER, // Assign default role
     });
-    return { ...this._generateTokens(user.id), userId: user.id };
+    return {
+      ...this._generateTokens(user.id),
+      userId: user.id,
+      role: user.role,
+    };
   }
 
   /**
@@ -34,7 +39,12 @@ export class AuthService {
    * @returns access_token and refresh_token
    */
   public async login(@Request() req: any): Promise<AuthResponse> {
-    return { ...this._generateTokens(req.id), userId: req.id };
+    const user = await this.usersService.findOne(req.id);
+    return {
+      ...this._generateTokens(user.id),
+      userId: user.id,
+      role: user.role,
+    };
   }
 
   /**
@@ -50,9 +60,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
     const userId = jwtDecode(refreshToken);
+    const user = await this.usersService.findOne(userId.sub || 'no user id');
     return {
-      ...this._generateTokens(userId.sub ?? 'no id in token'), // Ensure userId.sub is not undefined
-      userId: refreshToken.sub,
+      ...this._generateTokens(user.id),
+      userId: user.id,
+      role: user.role,
     };
   }
 
@@ -74,7 +86,6 @@ export class AuthService {
       pass,
       user.password,
     );
-    console.log('passaze', pass);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
@@ -88,7 +99,8 @@ export class AuthService {
 
   /**
    * Generate access token and refresh token
-   * @param user
+   * @param userId
+   * @param roles
    * @returns access_token and refresh_token
    */
   private _generateTokens(userId: string): TokenResponse {
