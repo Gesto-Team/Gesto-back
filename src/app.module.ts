@@ -1,25 +1,24 @@
 import { Module } from '@nestjs/common';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
-import { SeedModule } from './seed/seed.module';
+import { CompaniesModule } from './modules/companies/companies.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { SeedModule } from './modules/seed/seed.module';
+import { UsersModule } from './modules/users/users.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
-    UsersModule,
     AuthModule,
-    SeedModule,
+    CompaniesModule,
     ConfigModule.forRoot({ load: [configuration] }),
     MongooseModule.forRoot(
-      `${configuration().database.host}:${configuration().database.port}/${configuration().database.name}`,
+      `${configuration().database.host}/${configuration().database.name}`,
     ),
+    SeedModule,
+    UsersModule,
+    ProductsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

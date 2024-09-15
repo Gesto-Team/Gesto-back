@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  gesto-back:
+    container_name: gesto-back
+    restart: always
+    image: ghcr.io/gesto-team/gesto-back/gesto-back
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - DATABASE_URI=${DATABASE_PROD_URI}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - API_PORT=${API_PORT}
+      - CLIENT_URL=${CLIENT_URL}
+    ports:
+      - '3001:3000'

@@ -1,0 +1,46 @@
+name: build-test-deploy-prod
+
+on:
+  push:
+    branches:
+      - master
+      - devops
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: publish to registry
+        uses: VaultVulp/gp-docker-action@1.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          image-name: gesto-back
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: npm ci && npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: SSH Execute Commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker stop gesto-back
+            docker rm gesto-back
+            docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
+            docker run -d -p 3001:3000 --name gesto-back -e API_PORT=${{ secrets.API_PORT }} -e DATABASE_NAME=${{ secrets.DATABASE_NAME }} -e DATABASE_URI=${{ secrets.DATABASE_URI }} -e JWT_SECRET=${{ secrets.JWT_SECRET }} -e JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }} -e CLIENT_URL=${{ secrets.CLIENT_URL }} ghcr.io/gesto-team/gesto-back/gesto-back
