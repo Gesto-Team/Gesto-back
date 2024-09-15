@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
 import * as cookieParser from 'cookie-parser';
 import { xss } from 'express-xss-sanitizer';
+import * as basicAuth from 'express-basic-auth';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,16 @@ async function bootstrap() {
     origin: [configuration().clientUrl],
     credentials: true,
   });
+
+  app.use(
+    ['/api', '/docs', '/docs-json'],
+    basicAuth({
+      challenge: true,
+      users: {
+        [configuration().swaggerUsername]: configuration().swaggerPassword,
+      },
+    }),
+  );
 
   // Setting up swagger
   const config = new DocumentBuilder()
