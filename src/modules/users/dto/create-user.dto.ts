@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Role } from '../user.schema';
 
 export class CreateUserDto {
   @IsEmail()
@@ -6,4 +7,7 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   password: string = 'password';
+
+  @IsNotEmpty()
+  role: Role = Role.USER;
 }

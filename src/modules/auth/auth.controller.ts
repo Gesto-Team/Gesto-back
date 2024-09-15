@@ -48,9 +48,8 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   public async login(@Res() res: Response, @Req() req: Request) {
-    const { accessToken, refreshToken, userId } = await this.authService.login(
-      req.user as UserDocument,
-    );
+    const { accessToken, refreshToken, userId, role } =
+      await this.authService.login(req.user as UserDocument);
     return res
       .cookie('refresh_token', refreshToken, {
         httpOnly: true,
@@ -60,6 +59,7 @@ export class AuthController {
       .json({
         access_token: accessToken,
         userId: userId,
+        role: role,
       });
   }
 
