@@ -43,4 +43,4 @@ jobs:
             docker stop gesto-back
             docker rm gesto-back
             docker image rm -f ghcr.io/gesto-team/gesto-back/gesto-back
-            docker run -d -p 3001:3000 --name gesto-back -e API_PORT=${{ secrets.API_PORT }} -e DATABASE_NAME=${{ secrets.DATABASE_NAME }} -e DATABASE_URI=${{ secrets.DATABASE_URI }} -e JWT_SECRET=${{ secrets.JWT_SECRET }} -e JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }} -e CLIENT_URL=${{ secrets.CLIENT_URL }} ghcr.io/gesto-team/gesto-back/gesto-back
+            docker run -d -p 3000:3000 --name gesto-back -e API_PORT=${{ secrets.API_PORT }} -e DATABASE_NAME=${{ secrets.DATABASE_NAME }} -e DATABASE_URI=${{ secrets.DATABASE_URI }} -e JWT_SECRET=${{ secrets.JWT_SECRET }} -e JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }} -e CLIENT_URL=${{ secrets.CLIENT_URL }} ghcr.io/gesto-team/gesto-back/gesto-back
