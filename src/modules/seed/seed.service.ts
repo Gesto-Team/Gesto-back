@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
-import { SeedDto } from './dto/seed.dto';
 import { MongooseUserService } from 'src/modules/users/mongoose-user.service';
 import { MongooseCompanyService } from 'src/modules/companies/mongoose-companies.service';
 import { MongooseProductService } from '../products/mongoose-products.service';
+import { Role } from '../users/user.schema';
+import { SeedDto } from './dto/seed.dto';
 
 @Injectable()
 export class SeedService {
@@ -22,6 +23,7 @@ export class SeedService {
     const fakerUser = (): any => ({
       username: faker.internet.email(),
       password: faker.internet.password(),
+      role: Role.USER,
     });
     const users = Array.from({ length: seedUserDto.nbSeeds }, fakerUser);
     return users.map((user) => this.mgUserService.create(user));
