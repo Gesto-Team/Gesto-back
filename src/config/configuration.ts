@@ -9,4 +9,6 @@ export default () => ({
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   gestoSupportEmail: process.env.GESTO_SUPPORT_EMAIL || 'no email',
   gestoSupportPassword: process.env.GESTO_SUPPORT_PASSWORD || 'no password',
+  swaggerUsername: process.env.SWAGGER_USERNAME || 'no username',
+  swaggerPassword: process.env.SWAGGER_PASSWORD || 'no password',
 });
