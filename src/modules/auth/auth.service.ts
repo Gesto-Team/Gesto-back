@@ -80,7 +80,7 @@ export class AuthService {
   ): Promise<UserDocument> {
     const user = await this.usersService.findOneByUsername(username);
     if (!user) {
-      throw new UnauthorizedException('Invalid email');
+      throw new UnauthorizedException('Email invalide');
     }
     const isPasswordValid = await this.hasherService.compare(
       pass,
@@ -88,7 +88,7 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid password');
+      throw new UnauthorizedException('Mot de passe invalide');
     }
     return user;
   }
