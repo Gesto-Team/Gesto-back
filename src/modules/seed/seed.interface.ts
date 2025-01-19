@@ -1,0 +1,5 @@
+export enum DateEnum {
+  EXPIRED = 'EXPIRED',
+  NOT_EXPIRED = 'NOT_EXPIRED',
+  ALMOST_EXPIRED = 'ALMOST_EXPIRED',
+}

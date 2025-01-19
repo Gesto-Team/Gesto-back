@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { SeedService } from './seed.service';
 import { ApiTags } from '@nestjs/swagger';
-import { SeedDto } from './dto/seed.dto';
+import { SeedDto, SeedProductDto } from './dto/seed.dto';
 
 @ApiTags('seed')
 @Controller('seed')
@@ -9,17 +9,17 @@ export class SeedController {
   constructor(private readonly seedService: SeedService) {}
 
   @Post('users')
-  public seed(@Body() nbSeeds: SeedDto) {
-    return this.seedService.seedUsers(nbSeeds);
+  public seed(@Body() seedUsersDto: SeedDto) {
+    return this.seedService.seedUsers(seedUsersDto);
   }
 
   @Post('companies')
-  public seedCompanies(@Body() nbSeeds: SeedDto) {
-    return this.seedService.seedCompanies(nbSeeds);
+  public seedCompanies(@Body() seedCompaniesDto: SeedDto) {
+    return this.seedService.seedCompanies(seedCompaniesDto);
   }
 
   @Post('products')
-  public seedProducts(@Body() nbSeeds: SeedDto) {
-    return this.seedService.seedProducts(nbSeeds);
+  public seedProducts(@Body() seedProductDto: SeedProductDto) {
+    return this.seedService.seedProducts(seedProductDto);
   }
 }
